@@ -21,9 +21,9 @@ public class DroneAgent {
     @Autowired
     private DroneRequestSpecification droneRequestSpecification;
 
-    public DroneResponseDTO create(DroneRequestDTO droneRequestDTO){
+    public DroneResponseDTO create(DroneRequestDTO droneRequestDTO) {
         droneRequestSpecification.validateCreateRequest(droneRequestDTO);
-       Drone drone = droneConverter.convertToDrone(droneRequestDTO);
-       return droneConverter.convertToDroneResponseDTO(droneService.createDrone(drone));
+        Drone drone = droneConverter.convertToDrone(droneRequestDTO);
+        return droneConverter.convertToDroneResponseDTO(droneService.createDrone(drone));
     }
 }

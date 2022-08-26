@@ -1,7 +1,6 @@
 package com.safran.dronetransport.specification;
 
 import com.safran.dronetransport.dto.DroneRequestDTO;
-import com.safran.dronetransport.entity.DroneModel;
 import org.springframework.stereotype.Component;
 
 @Component
