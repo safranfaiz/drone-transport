@@ -1,5 +1,6 @@
 package com.safran.dronetransport.controller;
 
+import com.github.fge.jsonpatch.JsonPatch;
 import com.safran.dronetransport.agent.DroneAgent;
 import com.safran.dronetransport.dto.DroneRequestDTO;
 import com.safran.dronetransport.dto.DroneResponseDTO;
@@ -16,12 +17,17 @@ public class DroneController {
     DroneAgent droneAgent;
 
     @PostMapping
-    public DroneResponseDTO createDrone(@RequestBody DroneRequestDTO droneRequestDTO){
+    public DroneResponseDTO createDrone(@RequestBody DroneRequestDTO droneRequestDTO) {
         return droneAgent.create(droneRequestDTO);
     }
 
     @GetMapping
-    public List<DroneResponseDTO> getAllDrones(){
+    public List<DroneResponseDTO> getAllDrones() {
         return droneAgent.getAllDrones();
+    }
+
+    @PatchMapping("/{serialNumber}")
+    public DroneResponseDTO patchDrone(@PathVariable("serialNumber") long serialNumber, @RequestBody JsonPatch patch) {
+        return droneAgent.updateDroneBattery(serialNumber, patch);
     }
 }

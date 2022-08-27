@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DroneServiceImpl implements DroneService {
@@ -21,4 +22,22 @@ public class DroneServiceImpl implements DroneService {
     public List<Drone> getAllDrones(){
         return droneRepository.findAll();
     }
+
+    @Override
+    public Drone getDroneBySerialNumber(long serialNumber) {
+//        droneRepository.fin
+        return droneRepository.findBySerialNumber(serialNumber);
+    }
+
+    @Override
+    public Drone findByUUID(UUID uuid) {
+        return droneRepository.findById(uuid).get();
+    }
+
+    @Override
+    public void updateDroneBatteryPercentageBySerialNumber(int batteryPercentage,long serialNumber) {
+        droneRepository.updateDroneBatteryPercentageBySerialNumber(batteryPercentage, serialNumber);
+    }
+
+
 }

@@ -1,5 +1,8 @@
 package com.safran.dronetransport.agent;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.safran.dronetransport.convertor.DroneConverter;
 import com.safran.dronetransport.dto.DroneRequestDTO;
 import com.safran.dronetransport.dto.DroneResponseDTO;
@@ -8,6 +11,7 @@ import com.safran.dronetransport.service.DroneService;
 import com.safran.dronetransport.specification.DroneRequestSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,5 +53,17 @@ public class DroneAgent {
             droneResponseDTO.setWeight(drone.getWeight());
             return droneResponseDTO;
         }).collect(Collectors.toList());
+    }
+
+    public DroneResponseDTO updateDroneBattery(long serialNumber, JsonPatch patch) {
+        Drone drone = droneService.getDroneBySerialNumber(serialNumber);
+        if(drone == null) {
+            throw new RuntimeException("Cannot find Drone by this serial number: " + serialNumber);
+        }
+        drone.setBatteryCapacity(droneRequestSpecification.applyPatchToDrone(patch,new Drone()).getBatteryCapacity());
+//        droneService.updateDroneBatteryPercentageBySerialNumber(drone.getBatteryCapacity(),serialNumber);
+        droneService.updateDroneBatteryPercentageBySerialNumber(drone.getBatteryCapacity(),serialNumber);
+
+        return droneConverter.convertToDroneResponseDTO(droneService.getDroneBySerialNumber(serialNumber));
     }
 }
