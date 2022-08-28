@@ -35,4 +35,9 @@ public class DroneController {
     public DroneResponseDTO getDroneBySerialNumber(@PathVariable("serialNumber") long serialNumber){
         return droneAgent.getDroneBySerialNumber(serialNumber);
     }
+
+    @GetMapping("/available")
+    public List<DroneResponseDTO> getAvailableDroneForLoad(){
+        return droneAgent.getAvailableDroneForLoad();
+    }
 }

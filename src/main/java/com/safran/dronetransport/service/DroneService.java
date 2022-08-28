@@ -15,4 +15,6 @@ public interface DroneService {
     Drone findByUUID(UUID uuid);
 
     void updateDroneBatteryPercentageBySerialNumber(int batteryPercentage,long serialNumber);
+
+    List<Drone> getAvailableDrones();
 }

@@ -1,8 +1,6 @@
 package com.safran.dronetransport.agent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import com.safran.dronetransport.convertor.DroneConverter;
 import com.safran.dronetransport.dto.DroneRequestDTO;
 import com.safran.dronetransport.dto.DroneResponseDTO;
@@ -11,10 +9,8 @@ import com.safran.dronetransport.service.DroneService;
 import com.safran.dronetransport.specification.DroneRequestSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class DroneAgent {
@@ -44,15 +40,7 @@ public class DroneAgent {
      * @return List<DroneResponseDTO>
      */
     public List<DroneResponseDTO> getAllDrones() {
-        List<Drone> droneList = droneService.getAllDrones();
-        return droneList.stream().map(drone -> {
-            DroneResponseDTO droneResponseDTO = new DroneResponseDTO();
-            droneResponseDTO.setSerialNumber(drone.getSerialNumber());
-            droneResponseDTO.setModel(drone.getModel());
-            droneResponseDTO.setBatteryCapacity(drone.getBatteryCapacity());
-            droneResponseDTO.setWeight(drone.getWeight());
-            return droneResponseDTO;
-        }).collect(Collectors.toList());
+        return droneConverter.convertListOfDroneToDroneResponseDTO(droneService.getAllDrones());
     }
 
     public DroneResponseDTO updateDroneBattery(long serialNumber, JsonPatch patch) {
@@ -73,5 +61,9 @@ public class DroneAgent {
         if(drone == null)
             throw new RuntimeException("Cannot find Drone by this serial number: " + serialNumber);
         return drone;
+    }
+
+    public List<DroneResponseDTO> getAvailableDroneForLoad(){
+        return droneConverter.convertListOfDroneToDroneResponseDTO(droneService.getAvailableDrones());
     }
 }
