@@ -26,8 +26,13 @@ public class DroneController {
         return droneAgent.getAllDrones();
     }
 
-    @PatchMapping("/{serialNumber}")
+    @PatchMapping("/serial-number/{serialNumber}")
     public DroneResponseDTO patchDrone(@PathVariable("serialNumber") long serialNumber, @RequestBody JsonPatch patch) {
         return droneAgent.updateDroneBattery(serialNumber, patch);
+    }
+
+    @GetMapping("/serial-number/{serialNumber}")
+    public DroneResponseDTO getDroneBySerialNumber(@PathVariable("serialNumber") long serialNumber){
+        return droneAgent.getDroneBySerialNumber(serialNumber);
     }
 }

@@ -56,14 +56,22 @@ public class DroneAgent {
     }
 
     public DroneResponseDTO updateDroneBattery(long serialNumber, JsonPatch patch) {
-        Drone drone = droneService.getDroneBySerialNumber(serialNumber);
-        if(drone == null) {
-            throw new RuntimeException("Cannot find Drone by this serial number: " + serialNumber);
-        }
+        Drone drone = droneBySerialNumber(serialNumber);
         drone.setBatteryCapacity(droneRequestSpecification.applyPatchToDrone(patch,new Drone()).getBatteryCapacity());
 //        droneService.updateDroneBatteryPercentageBySerialNumber(drone.getBatteryCapacity(),serialNumber);
         droneService.updateDroneBatteryPercentageBySerialNumber(drone.getBatteryCapacity(),serialNumber);
 
         return droneConverter.convertToDroneResponseDTO(droneService.getDroneBySerialNumber(serialNumber));
+    }
+
+    public DroneResponseDTO getDroneBySerialNumber(long serialNumber){
+        return droneConverter.convertToDroneResponseDTO(droneBySerialNumber(serialNumber));
+    }
+
+    private Drone droneBySerialNumber(long serialNumber){
+        Drone drone = droneService.getDroneBySerialNumber(serialNumber);
+        if(drone == null)
+            throw new RuntimeException("Cannot find Drone by this serial number: " + serialNumber);
+        return drone;
     }
 }
