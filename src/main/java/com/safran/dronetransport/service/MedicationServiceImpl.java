@@ -15,4 +15,11 @@ public class MedicationServiceImpl implements MedicationService{
     public Medication createMedication(Medication medication) {
         return medicationRepository.save(medication);
     }
+
+    @Override
+    public Medication findByMedicationCode(String code) {
+        return medicationRepository.findByCode(code).orElseThrow(() ->
+                new RuntimeException("Cannot find medication by this code: "+code));
+
+    }
 }

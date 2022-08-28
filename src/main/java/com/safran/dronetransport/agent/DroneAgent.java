@@ -2,8 +2,7 @@ package com.safran.dronetransport.agent;
 
 import com.github.fge.jsonpatch.JsonPatch;
 import com.safran.dronetransport.convertor.DroneConverter;
-import com.safran.dronetransport.dto.DroneRequestDTO;
-import com.safran.dronetransport.dto.DroneResponseDTO;
+import com.safran.dronetransport.dto.*;
 import com.safran.dronetransport.entity.Drone;
 import com.safran.dronetransport.service.DroneService;
 import com.safran.dronetransport.specification.DroneRequestSpecification;
@@ -46,24 +45,23 @@ public class DroneAgent {
     public DroneResponseDTO updateDroneBattery(long serialNumber, JsonPatch patch) {
         Drone drone = droneBySerialNumber(serialNumber);
         drone.setBatteryCapacity(droneRequestSpecification.applyPatchToDrone(patch,new Drone()).getBatteryCapacity());
-//        droneService.updateDroneBatteryPercentageBySerialNumber(drone.getBatteryCapacity(),serialNumber);
-        droneService.updateDroneBatteryPercentageBySerialNumber(drone.getBatteryCapacity(),serialNumber);
-
-        return droneConverter.convertToDroneResponseDTO(droneService.getDroneBySerialNumber(serialNumber));
+        return droneConverter.convertToDroneResponseDTO(droneService.createDrone(drone));
     }
 
     public DroneResponseDTO getDroneBySerialNumber(long serialNumber){
         return droneConverter.convertToDroneResponseDTO(droneBySerialNumber(serialNumber));
     }
 
-    private Drone droneBySerialNumber(long serialNumber){
-        Drone drone = droneService.getDroneBySerialNumber(serialNumber);
-        if(drone == null)
-            throw new RuntimeException("Cannot find Drone by this serial number: " + serialNumber);
-        return drone;
+    public Drone droneBySerialNumber(long serialNumber){
+       return droneService.getDroneBySerialNumber(serialNumber);
     }
 
     public List<DroneResponseDTO> getAvailableDroneForLoad(){
         return droneConverter.convertListOfDroneToDroneResponseDTO(droneService.getAvailableDrones());
+    }
+
+    public DroneBatteryPercentageDTO getDroneBatteryPercentage(long serialNumber){
+        Drone drone = droneBySerialNumber(serialNumber);
+        return droneConverter.convertDroneToDroneBatteryPercentageDTO(drone);
     }
 }

@@ -17,4 +17,6 @@ public interface DroneService {
     void updateDroneBatteryPercentageBySerialNumber(int batteryPercentage,long serialNumber);
 
     List<Drone> getAvailableDrones();
+
+    Drone changeDroneState(Drone drone);
 }

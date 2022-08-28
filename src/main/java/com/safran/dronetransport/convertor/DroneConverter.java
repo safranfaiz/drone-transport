@@ -1,5 +1,6 @@
 package com.safran.dronetransport.convertor;
 
+import com.safran.dronetransport.dto.DroneBatteryPercentageDTO;
 import com.safran.dronetransport.dto.DroneRequestDTO;
 import com.safran.dronetransport.dto.DroneResponseDTO;
 import com.safran.dronetransport.entity.Drone;
@@ -7,7 +8,6 @@ import com.safran.dronetransport.entity.DroneState;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -15,7 +15,6 @@ public class DroneConverter {
 
     public Drone convertToDrone(DroneRequestDTO droneRequestDTO){
         Drone drone = new Drone();
-        drone.setUuid(UUID.randomUUID());
         drone.setDroneState(DroneState.IDLE);
         drone.setSerialNumber(droneRequestDTO.getSerialNumber());
         drone.setModel(droneRequestDTO.getModel());
@@ -46,5 +45,12 @@ public class DroneConverter {
             droneResponseDTO.setDroneState(drone.getDroneState());
             return droneResponseDTO;
         }).collect(Collectors.toList());
+    }
+
+    public DroneBatteryPercentageDTO convertDroneToDroneBatteryPercentageDTO(Drone drone){
+        DroneBatteryPercentageDTO droneBatteryPercentageDTO = new DroneBatteryPercentageDTO();
+        droneBatteryPercentageDTO.setSerialNumber(drone.getSerialNumber());
+        droneBatteryPercentageDTO.setBatteryPercentage(drone.getBatteryCapacity());
+        return droneBatteryPercentageDTO;
     }
 }

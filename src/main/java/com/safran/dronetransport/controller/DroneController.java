@@ -2,6 +2,7 @@ package com.safran.dronetransport.controller;
 
 import com.github.fge.jsonpatch.JsonPatch;
 import com.safran.dronetransport.agent.DroneAgent;
+import com.safran.dronetransport.dto.DroneBatteryPercentageDTO;
 import com.safran.dronetransport.dto.DroneRequestDTO;
 import com.safran.dronetransport.dto.DroneResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +27,24 @@ public class DroneController {
         return droneAgent.getAllDrones();
     }
 
-    @PatchMapping("/serial-number/{serialNumber}")
+    @PatchMapping("/{serialNumber}")
     public DroneResponseDTO patchDrone(@PathVariable("serialNumber") long serialNumber, @RequestBody JsonPatch patch) {
         return droneAgent.updateDroneBattery(serialNumber, patch);
     }
 
-    @GetMapping("/serial-number/{serialNumber}")
+    @GetMapping("/{serialNumber}")
     public DroneResponseDTO getDroneBySerialNumber(@PathVariable("serialNumber") long serialNumber){
         return droneAgent.getDroneBySerialNumber(serialNumber);
+    }
+
+    @GetMapping("/{serialNumber}/battery")
+    public DroneBatteryPercentageDTO getDroneBatteryPercentage(@PathVariable("serialNumber") long serialNumber){
+        return droneAgent.getDroneBatteryPercentage(serialNumber);
     }
 
     @GetMapping("/available")
     public List<DroneResponseDTO> getAvailableDroneForLoad(){
         return droneAgent.getAvailableDroneForLoad();
     }
+
 }

@@ -4,6 +4,7 @@ import com.safran.dronetransport.entity.Drone;
 import com.safran.dronetransport.entity.DroneState;
 import com.safran.dronetransport.repo.DroneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,19 +16,23 @@ public class DroneServiceImpl implements DroneService {
     @Autowired
     private DroneRepository droneRepository;
 
+    @Value("${drone.transport.battery.percentage.min}")
+    int batteryCapacity;
+
     @Override
     public Drone createDrone(Drone drone) {
         return droneRepository.save(drone);
     }
 
-    public List<Drone> getAllDrones(){
+    public List<Drone> getAllDrones() {
         return droneRepository.findAll();
     }
 
     @Override
     public Drone getDroneBySerialNumber(long serialNumber) {
-//        droneRepository.fin
-        return droneRepository.findBySerialNumber(serialNumber);
+        return droneRepository.findBySerialNumber(serialNumber).orElseThrow( () ->
+            new RuntimeException("Cannot find Drone by this serial number: " + serialNumber)
+        );
     }
 
     @Override
@@ -36,14 +41,18 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public void updateDroneBatteryPercentageBySerialNumber(int batteryPercentage,long serialNumber) {
+    public void updateDroneBatteryPercentageBySerialNumber(int batteryPercentage, long serialNumber) {
         droneRepository.updateDroneBatteryPercentageBySerialNumber(batteryPercentage, serialNumber);
     }
 
     @Override
     public List<Drone> getAvailableDrones() {
-        return droneRepository.findByDroneState(DroneState.IDLE);
+        return droneRepository.findByDroneStateAndBatteryCapacityGreaterThan(DroneState.IDLE, batteryCapacity);
     }
 
+    @Override
+    public Drone changeDroneState(Drone drone) {
+        return createDrone(drone);
+    }
 
 }

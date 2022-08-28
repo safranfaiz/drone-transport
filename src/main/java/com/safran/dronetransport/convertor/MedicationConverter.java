@@ -4,14 +4,11 @@ import com.safran.dronetransport.dto.MedicationDTO;
 import com.safran.dronetransport.entity.Medication;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class MedicationConverter {
 
     public Medication convertToMedication(MedicationDTO medicationDTO){
         Medication medication = new Medication();
-        medication.setUuid(UUID.randomUUID());
         medication.setName(medicationDTO.getName());
         medication.setWeight(medicationDTO.getWeight());
         medication.setCode(medicationDTO.getCode());
