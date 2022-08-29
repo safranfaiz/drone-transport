@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface DispatchLoadService {
 
-    DispatchLoad createDispatch();
+    DispatchLoad createDispatch(DispatchLoad dispatchLoad);
 
     List<DispatchLoad> findAll();
 }

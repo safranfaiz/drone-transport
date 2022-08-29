@@ -3,9 +3,9 @@ package com.safran.dronetransport.agent;
 import com.safran.dronetransport.dto.LoadDispatcherDroneDTO;
 import com.safran.dronetransport.dto.LoadDispatcherMedicationDTO;
 import com.safran.dronetransport.entity.*;
-import com.safran.dronetransport.repo.DispatchLoadRepository;
-import com.safran.dronetransport.repo.MedicationLoadRepository;
+import com.safran.dronetransport.service.DispatchLoadService;
 import com.safran.dronetransport.service.DroneService;
+import com.safran.dronetransport.service.MedicationLoadService;
 import com.safran.dronetransport.service.MedicationService;
 import com.safran.dronetransport.specification.DroneRequestSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +27,10 @@ public class DispatchAgent {
     DroneAgent droneAgent;
 
     @Autowired
-    DispatchLoadRepository dispatchLoadRepository;
+    DispatchLoadService dispatchLoadService;
 
     @Autowired
-    MedicationLoadRepository medicationLoadRepository;
+    MedicationLoadService medicationLoadService;
 
     public DispatchLoad loadDispatchMedicine(LoadDispatcherDroneDTO dispatcherDroneDTO){
         // check drone is exist, battery capacity and state
@@ -57,7 +57,7 @@ public class DispatchAgent {
 
             // save dispatch
             dispatchLoad.setDrone(drone);
-            dispatchLoad = dispatchLoadRepository.save(dispatchLoad);
+            dispatchLoad = dispatchLoadService.createDispatch(dispatchLoad);
 
             // save medication
             MedicationLoad medicationLoad = new MedicationLoad();
@@ -66,10 +66,10 @@ public class DispatchAgent {
             medicationLoad.setTotal(medicationWeight);
             medicationLoad.setDispatchLoad(dispatchLoad);
 
-            medicationLoadRepository.save(medicationLoad);
+            medicationLoadService.createMedicationLoad(medicationLoad);
         }
 
-        //todo change drone status
+        // change drone status
         drone.setDroneState(DroneState.LOADED);
         droneService.changeDroneState(drone);
         return dispatchLoad;

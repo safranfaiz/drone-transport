@@ -1,8 +1,9 @@
-package com.safran.dronetransport.service;
+package com.safran.dronetransport.service.impl;
 
 import com.safran.dronetransport.entity.Drone;
 import com.safran.dronetransport.entity.DroneState;
 import com.safran.dronetransport.repo.DroneRepository;
+import com.safran.dronetransport.service.DroneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

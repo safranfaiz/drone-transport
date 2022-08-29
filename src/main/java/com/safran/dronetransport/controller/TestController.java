@@ -21,8 +21,8 @@ public class TestController {
         return dispatchLoadService.findAll();
     }
 
-    @GetMapping("/save")
-    public DispatchLoad ddd(){
-        return dispatchLoadService.createDispatch();
-    }
+//    @GetMapping("/save")
+//    public DispatchLoad ddd(){
+//        return dispatchLoadService.createDispatch();
+//    }
 }
