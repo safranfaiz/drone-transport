@@ -11,6 +11,8 @@ import com.safran.dronetransport.specification.DroneRequestSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class DispatchAgent {
 
@@ -32,6 +34,11 @@ public class DispatchAgent {
     @Autowired
     MedicationLoadService medicationLoadService;
 
+    /**
+     * Medications load to the drone and change the drone state as well
+     * @param dispatcherDroneDTO
+     * @return DispatchLoad
+     */
     public DispatchLoad loadDispatchMedicine(LoadDispatcherDroneDTO dispatcherDroneDTO){
         // check drone is exist, battery capacity and state
         Drone drone = droneAgent.droneBySerialNumber(dispatcherDroneDTO.getSerialNumber());
@@ -74,5 +81,13 @@ public class DispatchAgent {
         droneService.changeDroneState(drone);
         return dispatchLoad;
 
+    }
+
+    /**
+     * retrieve all drones which are dispatch with items
+     * @return List<DispatchLoad>
+     */
+    public List<DispatchLoad> loadDispatchDroneWithItems(){
+        return dispatchLoadService.findAll();
     }
 }
