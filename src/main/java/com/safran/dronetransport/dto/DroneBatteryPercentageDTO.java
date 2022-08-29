@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class DroneBatteryPercentageDTO {
-    private long serialNumber;
+    private Long serialNumber;
     private int batteryPercentage;
 }

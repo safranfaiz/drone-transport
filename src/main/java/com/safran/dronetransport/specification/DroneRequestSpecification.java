@@ -9,10 +9,14 @@ import com.safran.dronetransport.dto.DroneBatteryPercentageDTO;
 import com.safran.dronetransport.dto.DroneRequestDTO;
 import com.safran.dronetransport.entity.Drone;
 import com.safran.dronetransport.entity.DroneState;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DroneRequestSpecification {
+
+    @Value("${drone.transport.battery.percentage.min}")
+    int batteryCapacity;
 
     public void validateCreateRequest(DroneRequestDTO requestDTO){
         if(requestDTO.getWeight() <= 0 || requestDTO.getWeight() > 500){
@@ -32,13 +36,10 @@ public class DroneRequestSpecification {
         }
     }
 
-    public void checkDroneBatteryPercentage(int batteryCapacity){
-        if (batteryCapacity < 25)
-            throw new RuntimeException("Drone Battery is low "+batteryCapacity+"%");
-    }
-
-    public void droneStateIsIDEL(DroneState droneState){
-        if (droneState != DroneState.IDLE)
-            throw new RuntimeException("Drone is already "+droneState);
+    public void checkDroneValidityForLoading(Drone drone){
+        if (drone.getBatteryCapacity() < batteryCapacity)
+            throw new RuntimeException("Drone Battery is low "+drone.getBatteryCapacity()+"%");
+        if (drone.getDroneState() != DroneState.IDLE)
+            throw new RuntimeException("Drone is already "+drone.getDroneState());
     }
 }

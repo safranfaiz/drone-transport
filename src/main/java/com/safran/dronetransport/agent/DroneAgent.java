@@ -42,17 +42,17 @@ public class DroneAgent {
         return droneConverter.convertListOfDroneToDroneResponseDTO(droneService.getAllDrones());
     }
 
-    public DroneResponseDTO updateDroneBattery(long serialNumber, JsonPatch patch) {
+    public DroneResponseDTO updateDroneBattery(Long serialNumber, JsonPatch patch) {
         Drone drone = droneBySerialNumber(serialNumber);
         drone.setBatteryCapacity(droneRequestSpecification.applyPatchToDrone(patch,new Drone()).getBatteryCapacity());
         return droneConverter.convertToDroneResponseDTO(droneService.createDrone(drone));
     }
 
-    public DroneResponseDTO getDroneBySerialNumber(long serialNumber){
+    public DroneResponseDTO getDroneBySerialNumber(Long serialNumber){
         return droneConverter.convertToDroneResponseDTO(droneBySerialNumber(serialNumber));
     }
 
-    public Drone droneBySerialNumber(long serialNumber){
+    public Drone droneBySerialNumber(Long serialNumber){
        return droneService.getDroneBySerialNumber(serialNumber);
     }
 
@@ -60,7 +60,7 @@ public class DroneAgent {
         return droneConverter.convertListOfDroneToDroneResponseDTO(droneService.getAvailableDrones());
     }
 
-    public DroneBatteryPercentageDTO getDroneBatteryPercentage(long serialNumber){
+    public DroneBatteryPercentageDTO getDroneBatteryPercentage(Long serialNumber){
         Drone drone = droneBySerialNumber(serialNumber);
         return droneConverter.convertDroneToDroneBatteryPercentageDTO(drone);
     }

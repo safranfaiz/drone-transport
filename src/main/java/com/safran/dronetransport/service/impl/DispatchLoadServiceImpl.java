@@ -34,4 +34,9 @@ public class DispatchLoadServiceImpl implements DispatchLoadService {
     public List<DispatchLoad> findAll(){
         return dispatchLoadRepository.findAll();
     }
+
+    @Override
+    public DispatchLoad findByDroneSerialNumber(Long serialNumber) {
+        return dispatchLoadRepository.findByDrone_SerialNumber(serialNumber);
+    }
 }

@@ -11,18 +11,18 @@ public class Drone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    @Column(nullable = false,length = 100)
-    private long serialNumber;
+    private Long id;
+    @Column(nullable = false,length = 100, unique = true)
+    private Long serialNumber;
     @Column(nullable = false)
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private DroneModel model;
     @Column(nullable = false)
-    private long weight;
+    private Long weight;
     @Column(nullable = false)
-    private int batteryCapacity;
+    private Integer batteryCapacity;
     @Column(nullable = false)
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private DroneState droneState;
 
 }

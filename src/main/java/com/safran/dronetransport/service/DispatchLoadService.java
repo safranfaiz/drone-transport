@@ -9,4 +9,6 @@ public interface DispatchLoadService {
     DispatchLoad createDispatch(DispatchLoad dispatchLoad);
 
     List<DispatchLoad> findAll();
+
+    DispatchLoad findByDroneSerialNumber(Long serialNumber);
 }

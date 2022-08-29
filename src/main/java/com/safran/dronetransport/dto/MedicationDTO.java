@@ -6,7 +6,7 @@ import lombok.Data;
 public class MedicationDTO {
 
     private String name;
-    private long weight;
+    private Long weight;
     private String code;
     private String image;
 }

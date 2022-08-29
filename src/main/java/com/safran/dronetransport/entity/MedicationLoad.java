@@ -12,13 +12,13 @@ public class MedicationLoad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @ManyToOne
     private Medication medication;
 
-    private long qty;
-    private long total;
+    private Long qty;
+    private Long total;
 
     @ManyToOne
     @JsonIgnore

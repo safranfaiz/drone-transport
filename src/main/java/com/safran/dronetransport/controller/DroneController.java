@@ -28,17 +28,17 @@ public class DroneController {
     }
 
     @PatchMapping("/{serialNumber}")
-    public DroneResponseDTO patchDrone(@PathVariable("serialNumber") long serialNumber, @RequestBody JsonPatch patch) {
+    public DroneResponseDTO patchDrone(@PathVariable("serialNumber") Long serialNumber, @RequestBody JsonPatch patch) {
         return droneAgent.updateDroneBattery(serialNumber, patch);
     }
 
     @GetMapping("/{serialNumber}")
-    public DroneResponseDTO getDroneBySerialNumber(@PathVariable("serialNumber") long serialNumber){
+    public DroneResponseDTO getDroneBySerialNumber(@PathVariable("serialNumber") Long serialNumber){
         return droneAgent.getDroneBySerialNumber(serialNumber);
     }
 
     @GetMapping("/{serialNumber}/battery")
-    public DroneBatteryPercentageDTO getDroneBatteryPercentage(@PathVariable("serialNumber") long serialNumber){
+    public DroneBatteryPercentageDTO getDroneBatteryPercentage(@PathVariable("serialNumber") Long serialNumber){
         return droneAgent.getDroneBatteryPercentage(serialNumber);
     }
 

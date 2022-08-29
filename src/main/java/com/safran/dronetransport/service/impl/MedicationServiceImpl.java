@@ -1,6 +1,7 @@
 package com.safran.dronetransport.service.impl;
 
 import com.safran.dronetransport.entity.Medication;
+import com.safran.dronetransport.exception.ResourceNotFoundException;
 import com.safran.dronetransport.repo.MedicationRepository;
 import com.safran.dronetransport.service.MedicationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class MedicationServiceImpl implements MedicationService {
     @Override
     public Medication findByMedicationCode(String code) {
         return medicationRepository.findByCode(code).orElseThrow(() ->
-                new RuntimeException("Cannot find medication by this code: "+code));
+                new ResourceNotFoundException("Cannot find medication by this code: "+code));
 
     }
 }

@@ -13,9 +13,10 @@ public class DispatchLoad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     @ManyToOne
     private Drone drone;
     @OneToMany(mappedBy = "dispatchLoad", cascade = CascadeType.ALL)
     private List<MedicationLoad> medicationLoads;
+    private Long totalWeight;
 }

@@ -7,10 +7,10 @@ import lombok.Data;
 @Data
 public class DroneResponseDTO {
 
-    private long serialNumber;
+    private Long serialNumber;
     private DroneModel model;
-    private long weight;
-    private int batteryCapacity;
+    private Long weight;
+    private Integer batteryCapacity;
     private DroneState droneState;
 
 }

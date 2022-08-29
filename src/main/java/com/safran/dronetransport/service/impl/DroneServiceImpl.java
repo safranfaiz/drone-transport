@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class DroneServiceImpl implements DroneService {
@@ -18,7 +17,7 @@ public class DroneServiceImpl implements DroneService {
     private DroneRepository droneRepository;
 
     @Value("${drone.transport.battery.percentage.min}")
-    int batteryCapacity;
+    Integer batteryCapacity;
 
     @Override
     public Drone createDrone(Drone drone) {
@@ -30,20 +29,10 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Drone getDroneBySerialNumber(long serialNumber) {
+    public Drone getDroneBySerialNumber(Long serialNumber) {
         return droneRepository.findBySerialNumber(serialNumber).orElseThrow( () ->
             new RuntimeException("Cannot find Drone by this serial number: " + serialNumber)
         );
-    }
-
-    @Override
-    public Drone findByUUID(UUID uuid) {
-        return droneRepository.findById(uuid).get();
-    }
-
-    @Override
-    public void updateDroneBatteryPercentageBySerialNumber(int batteryPercentage, long serialNumber) {
-        droneRepository.updateDroneBatteryPercentageBySerialNumber(batteryPercentage, serialNumber);
     }
 
     @Override
@@ -52,7 +41,8 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Drone changeDroneState(Drone drone) {
+    public Drone changeDroneState(Drone drone, DroneState droneState) {
+        drone.setDroneState(droneState);
         return createDrone(drone);
     }
 

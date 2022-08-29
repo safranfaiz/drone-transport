@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DispatchLoadRepository extends JpaRepository<DispatchLoad, Long> {
+    DispatchLoad findByDrone_SerialNumber(Long serialNumber);
 }
