@@ -11,7 +11,7 @@ public class Drone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long uuid;
+    private long id;
     @Column(nullable = false,length = 100)
     private long serialNumber;
     @Column(nullable = false)

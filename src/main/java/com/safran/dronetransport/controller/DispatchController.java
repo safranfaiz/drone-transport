@@ -20,7 +20,7 @@ public class DispatchController {
         return dispatchAgent.loadDispatchMedicine(dispatcherDroneDTO);
     }
 
-    @GetMapping("/tet")
+    @GetMapping("")
     public List<DispatchLoad> test(){
         return dispatchAgent.loadDispatchDroneWithItems();
     }
