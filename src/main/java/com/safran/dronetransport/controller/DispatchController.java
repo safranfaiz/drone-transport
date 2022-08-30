@@ -1,6 +1,7 @@
 package com.safran.dronetransport.controller;
 
 import com.safran.dronetransport.agent.DispatchAgent;
+import com.safran.dronetransport.dto.DispatchLoadResponseDTO;
 import com.safran.dronetransport.dto.LoadDispatcherDroneDTO;
 import com.safran.dronetransport.entity.DispatchLoad;
 import com.safran.dronetransport.entity.MedicationLoad;
@@ -18,12 +19,12 @@ public class DispatchController {
     DispatchAgent dispatchAgent;
 
     @PostMapping("/load")
-    public DispatchLoad loadDispatcher(@Valid @RequestBody LoadDispatcherDroneDTO dispatcherDroneDTO){
+    public DispatchLoadResponseDTO loadDispatcher(@Valid @RequestBody LoadDispatcherDroneDTO dispatcherDroneDTO){
         return dispatchAgent.loadDispatchMedicine(dispatcherDroneDTO);
     }
 
     @GetMapping("")
-    public List<DispatchLoad> getAllDispatchLoad(){
+    public List<DispatchLoadResponseDTO> getAllDispatchLoad(){
         return dispatchAgent.loadDispatchDroneWithItems();
     }
 

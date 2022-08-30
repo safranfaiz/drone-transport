@@ -1,5 +1,6 @@
 package com.safran.dronetransport.service.impl;
 
+import com.safran.dronetransport.constant.ErrorMessage;
 import com.safran.dronetransport.entity.Drone;
 import com.safran.dronetransport.entity.DroneState;
 import com.safran.dronetransport.repo.DroneRepository;
@@ -31,7 +32,7 @@ public class DroneServiceImpl implements DroneService {
     @Override
     public Drone getDroneBySerialNumber(Long serialNumber) {
         return droneRepository.findBySerialNumber(serialNumber).orElseThrow( () ->
-            new RuntimeException("Cannot find Drone by this serial number: " + serialNumber)
+            new RuntimeException(ErrorMessage.Drone.DRONE_NOT_FOUND + serialNumber)
         );
     }
 

@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
-import com.safran.dronetransport.dto.DroneBatteryPercentageDTO;
+import com.safran.dronetransport.constant.ErrorMessage;
+import com.safran.dronetransport.constant.Symbol;
 import com.safran.dronetransport.dto.DroneRequestDTO;
 import com.safran.dronetransport.entity.Drone;
 import com.safran.dronetransport.entity.DroneState;
@@ -20,7 +21,7 @@ public class DroneRequestSpecification {
 
     public void validateCreateRequest(DroneRequestDTO requestDTO){
         if(requestDTO.getWeight() <= 0 || requestDTO.getWeight() > 500){
-            throw new RuntimeException("Your drone is over weight");
+            throw new RuntimeException(ErrorMessage.Drone.DRONE_WEIGHT_ERROR);
         }
     }
 
@@ -38,8 +39,8 @@ public class DroneRequestSpecification {
 
     public void checkDroneValidityForLoading(Drone drone){
         if (drone.getBatteryCapacity() < batteryCapacity)
-            throw new RuntimeException("Drone Battery is low "+drone.getBatteryCapacity()+"%");
+            throw new RuntimeException(ErrorMessage.Drone.DRONE_BATTERY_LOW_ERROR+drone.getBatteryCapacity()+ Symbol.PERCENTAGE);
         if (drone.getDroneState() != DroneState.IDLE)
-            throw new RuntimeException("Drone is already "+drone.getDroneState());
+            throw new RuntimeException(ErrorMessage.Drone.DRONE_NOT_LOADABLE);
     }
 }

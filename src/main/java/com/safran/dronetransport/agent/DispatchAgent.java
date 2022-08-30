@@ -1,7 +1,9 @@
 package com.safran.dronetransport.agent;
 
-import com.safran.dronetransport.dto.LoadDispatcherDroneDTO;
-import com.safran.dronetransport.dto.LoadDispatcherMedicationDTO;
+import com.safran.dronetransport.convertor.DispatchConverter;
+import com.safran.dronetransport.convertor.DroneConverter;
+import com.safran.dronetransport.convertor.MedicationLoadConverter;
+import com.safran.dronetransport.dto.*;
 import com.safran.dronetransport.entity.*;
 import com.safran.dronetransport.exception.ResourceNotFoundException;
 import com.safran.dronetransport.service.DispatchLoadService;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -31,13 +34,19 @@ public class DispatchAgent {
     DroneService droneService;
 
     @Autowired
-    DroneAgent droneAgent;
-
-    @Autowired
     DispatchLoadService dispatchLoadService;
 
     @Autowired
     MedicationLoadService medicationLoadService;
+
+    @Autowired
+    DispatchConverter dispatchConverter;
+
+    @Autowired
+    DroneConverter droneConverter;
+
+    @Autowired
+    MedicationLoadConverter medicationLoadConverter;
 
     /**
      * Medications load to the drone and change the drone state as well
@@ -46,9 +55,9 @@ public class DispatchAgent {
      * @return DispatchLoad
      */
     @Transactional
-    public DispatchLoad loadDispatchMedicine(LoadDispatcherDroneDTO dispatcherDroneDTO) {
+    public DispatchLoadResponseDTO loadDispatchMedicine(LoadDispatcherDroneDTO dispatcherDroneDTO) {
         // check drone is exist, battery capacity and state
-        Drone drone = droneAgent.droneBySerialNumber(dispatcherDroneDTO.getSerialNumber());
+        Drone drone = droneService.getDroneBySerialNumber(dispatcherDroneDTO.getSerialNumber());
         droneRequestSpecification.checkDroneValidityForLoading(drone);
         droneService.changeDroneState(drone, DroneState.LOADING);
         DispatchLoad dispatchLoad = createDispatchLoad(drone);
@@ -57,13 +66,11 @@ public class DispatchAgent {
         dispatchLoad = updateDispatchLoad(dispatchLoad);
 
         // change drone status
-//        drone.setDroneState(DroneState.LOADED);
         droneService.changeDroneState(drone, DroneState.LOADED);
-        return dispatchLoad;
-
+        return buildDispatchLoadResponse(dispatchLoad);
     }
 
-    private DispatchLoad updateDispatchLoad(DispatchLoad dispatchLoad){
+    private DispatchLoad updateDispatchLoad(DispatchLoad dispatchLoad) {
         return dispatchLoadService.createDispatch(dispatchLoad);
     }
 
@@ -86,8 +93,7 @@ public class DispatchAgent {
                 Medication medication = medicationService.findByMedicationCode(loadDispatcherMedicationDTO.getCode());
                 Long medicationWeight = medication.getWeight() * loadDispatcherMedicationDTO.getQty();
                 totalWeight = totalWeight + medicationWeight;
-                medicationLoads.add(createMedicationLoad(medication,
-                        loadDispatcherMedicationDTO.getQty(), medicationWeight, dispatchLoad));
+                medicationLoads.add(createMedicationLoad(medication, loadDispatcherMedicationDTO.getQty(), medicationWeight, dispatchLoad));
             } catch (ResourceNotFoundException e) {
                 log.error("Medication Not found {}", loadDispatcherMedicationDTO.getCode());
                 inValidMedications.add(loadDispatcherMedicationDTO.getCode());
@@ -99,9 +105,10 @@ public class DispatchAgent {
         }
 
         if (totalWeight > drone.getWeight()) {
-            throw new RuntimeException("Maximum Drone weight "+drone.getWeight()+"g");
+            throw new RuntimeException("Maximum Drone weight " + drone.getWeight() + "g");
         }
         medicationLoads.stream().forEach(medicationLoadService::createMedicationLoad);
+        dispatchLoad.setMedicationLoads(medicationLoads);
         return totalWeight;
     }
 
@@ -116,11 +123,19 @@ public class DispatchAgent {
      *
      * @return List<DispatchLoad>
      */
-    public List<DispatchLoad> loadDispatchDroneWithItems() {
-        return dispatchLoadService.findAll();
+    public List<DispatchLoadResponseDTO> loadDispatchDroneWithItems() {
+        return dispatchLoadService.findAll().stream().map(this::buildDispatchLoadResponse).collect(Collectors.toList());
     }
 
-    public DispatchLoad getDispatchLoadBySerialNumber(Long serialNumber){
+    public DispatchLoad getDispatchLoadBySerialNumber(Long serialNumber) {
         return dispatchLoadService.findByDroneSerialNumber(serialNumber);
+    }
+
+    private DispatchLoadResponseDTO buildDispatchLoadResponse(DispatchLoad dispatchLoad) {
+        DroneResponseDTO droneResponseDTO = droneConverter.convertToDroneResponseDTO(dispatchLoad.getDrone());
+        List<MedicationLoadResponseDTO> medicationLoadResponseDTOS = dispatchLoad.getMedicationLoads().stream().map(medicationLoadConverter::convertToMedicationLoadResponse).collect(Collectors.toList());
+
+        return dispatchConverter.convertDispatchLoadToDispatchLoadResponseDTO(dispatchLoad, droneResponseDTO, medicationLoadResponseDTOS);
+
     }
 }
