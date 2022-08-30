@@ -1,12 +1,7 @@
 package com.safran.dronetransport.entity;
 
 import lombok.*;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import java.util.UUID;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -15,18 +10,19 @@ import java.util.UUID;
 public class Drone {
 
     @Id
-    private UUID uuid;
-    @Column(nullable = false,length = 100)
-    private long serialNumber;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(nullable = false,length = 100, unique = true)
+    private Long serialNumber;
     @Column(nullable = false)
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private DroneModel model;
     @Column(nullable = false)
-    private long weight;
+    private Long weight;
     @Column(nullable = false)
-    private int batteryCapacity;
+    private Integer batteryCapacity;
     @Column(nullable = false)
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private DroneState droneState;
 
 }

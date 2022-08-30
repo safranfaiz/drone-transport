@@ -1,0 +1,35 @@
+<configuration>
+
+    <!-- Normal debug log appender -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>log/battery-history.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE1" class="ch.qos.logback.core.FileAppender">
+        <file>log/drone-transport.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{25} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Setup the root category, add the appenders and set the default level -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE1" />
+    </root>
+
+    <!-- Specify the level specific to co.myapp.notifier -->
+    <logger name="com.safran.dronetransport.scheduler.BatteryCheckScheduler">
+        <level value="INFO" />
+        <appender-ref ref="FILE" />
+    </logger>
+</configuration>
