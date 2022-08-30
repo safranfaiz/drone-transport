@@ -52,7 +52,7 @@ public class DispatchAgent {
      * Medications load to the drone and change the drone state as well
      *
      * @param dispatcherDroneDTO
-     * @return DispatchLoad
+     * @return DispatchLoadResponseDTO
      */
     @Transactional
     public DispatchLoadResponseDTO loadDispatchMedicine(LoadDispatcherDroneDTO dispatcherDroneDTO) {
@@ -107,7 +107,7 @@ public class DispatchAgent {
         if (totalWeight > drone.getWeight()) {
             throw new RuntimeException("Maximum Drone weight " + drone.getWeight() + "g");
         }
-        medicationLoads.stream().forEach(medicationLoadService::createMedicationLoad);
+        medicationLoads.forEach(medicationLoadService::createMedicationLoad);
         dispatchLoad.setMedicationLoads(medicationLoads);
         return totalWeight;
     }

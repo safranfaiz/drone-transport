@@ -30,10 +30,8 @@ public class DroneRequestSpecification {
         try{
             JsonNode patched  = patch.apply(objectMapper.convertValue(drone, JsonNode.class));
             return objectMapper.treeToValue(patched, Drone.class);
-        } catch (JsonPatchException patchException){
+        } catch (JsonPatchException | JsonProcessingException patchException){
             throw new RuntimeException(patchException);
-        } catch (JsonProcessingException processingException){
-            throw new RuntimeException(processingException);
         }
     }
 
